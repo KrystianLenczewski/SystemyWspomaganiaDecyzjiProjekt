@@ -20,15 +20,15 @@ namespace SystemyWspomaganiaDecyzjiProjekt.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return View(new UploadFileModel());
         }
 
         [HttpPost]
-        public IActionResult Index(IFormFile file)
+        public IActionResult Index(UploadFileModel model)
         {
-            if(file is not null)
+            if (model is not null)
             {
-                DataTable dataTable = _importService.ImportData(file);
+                DataTable dataTable = _importService.ImportData(model);
                 _dataStructure.ImportData(dataTable);
             }
             return View();

@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using SystemyWspomaganiaDecyzjiProjekt.Models;
 using SystemyWspomaganiaDecyzjiProjekt.Services.Interfaces;
 
 namespace SystemyWspomaganiaDecyzjiProjekt.Services
@@ -17,16 +19,16 @@ namespace SystemyWspomaganiaDecyzjiProjekt.Services
 
         }
 
-        public DataTable ImportData(IFormFile file)
+        public DataTable ImportData(UploadFileModel model)
         {
-            string fileName = Path.GetExtension(file.FileName);
+            string fileName = Path.GetExtension(model.File.FileName);
             if (fileName == ".xlsx")
             {
-               return ImportExcelData(file);
+               //return ImportExcelData(file);
             }
             else if (fileName == ".txt")
             {
-               return ImportTextData(file);
+               return ImportTextData(model);
             }
             throw new Exception($"{fileName} is not supported");
         }
@@ -36,13 +38,20 @@ namespace SystemyWspomaganiaDecyzjiProjekt.Services
             throw new NotImplementedException();
         }
 
-        public DataTable ImportTextData(IFormFile file)
+        public static bool IsAWord( string text)
+        {
+            var regex = new Regex(@"\b[\w']+\b");
+            var match = regex.Match(text);
+            return match.Value.Equals(text);
+        }
+
+        public DataTable ImportTextData(UploadFileModel model)
         {
             DataTable dt = new DataTable();
 
-                if (file.Length > 0)
+                if (model.File.Length > 0)
                 {
-                StreamReader stream = new StreamReader(file.OpenReadStream());
+                StreamReader stream = new StreamReader(model.File.OpenReadStream());
 
                 string line;
                 while ((line = stream.ReadLine()) != null)
@@ -50,12 +59,22 @@ namespace SystemyWspomaganiaDecyzjiProjekt.Services
                     if (!(line.StartsWith("#") || String.IsNullOrEmpty(line.Trim())))
                     {
 
-                        if (dt.Columns.Count == 0)
+                        if (dt.Columns.Count == 0 && model.IsHeader)
                         {
                             string[] columnHeders = line.Split("\t");
                             foreach (var item in columnHeders)
                             {
                                 dt.Columns.Add(item);
+                            }
+                        }
+                        else if(dt.Columns.Count == 0 && !model.IsHeader)
+                        {
+                            string[] columnHeders = line.Split("\t");
+                            int columnNumbers = columnHeders.Count();
+
+                           for(int i=0;i<columnNumbers; i++)
+                            {
+                                dt.Columns.Add($"Kolumna nr {i + 1}");
                             }
                         }
                         else

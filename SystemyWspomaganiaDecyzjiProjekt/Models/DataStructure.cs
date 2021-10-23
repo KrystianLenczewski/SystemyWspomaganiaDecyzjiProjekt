@@ -12,23 +12,21 @@ namespace SystemyWspomaganiaDecyzjiProjekt.Models
         private Dictionary<string, ColumnType> columnTypes = new Dictionary<string, ColumnType>();
 
         private List<DataRow> rows = new List<DataRow>();
-
-        List<string> words = new List<string>();
          public void ImportData(DataTable dataTable)
         {
             foreach (System.Data.DataRow item in dataTable.Rows)
             {
 
-                Dictionary<string, string> _cells = new Dictionary<string, string>();
+                List<string> _cells = new List<string>();
                 int counter = 0;
                 foreach (var cell in item.ItemArray)
                 {
                     counter++;
-                    _cells.Add(counter.ToString(), cell.ToString());
+                    _cells.Add(cell.ToString());
                 }
 
-                DataRow row = new DataRow(_cells);
-                rows.Add(row);
+                //DataRow row = new DataRow(_cells);
+                AddRow(_cells);
             }
 
         }
