@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System.IO;
+using SystemyWspomaganiaDecyzjiProjekt.Extensions;
 using SystemyWspomaganiaDecyzjiProjekt.Models;
 using SystemyWspomaganiaDecyzjiProjekt.Services.Interfaces;
 
@@ -29,9 +30,10 @@ namespace SystemyWspomaganiaDecyzjiProjekt.Controllers
             if (model is not null)
             {
                 DataTable dataTable = _importService.ImportData(model);
+                _dataStructure.InitializeColumnTypes(dataTable.GetColumnNames());
                 _dataStructure.ImportData(dataTable);
             }
-            return View();
+            return RedirectToAction("Index", "Home");
         }
     }
 }

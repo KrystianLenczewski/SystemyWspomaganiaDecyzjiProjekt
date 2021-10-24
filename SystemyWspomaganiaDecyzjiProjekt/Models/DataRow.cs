@@ -25,5 +25,9 @@ namespace SystemyWspomaganiaDecyzjiProjekt.Models
         {
             return _cells.ContainsKey(cellName) ? _cells[cellName] : "";
         }
+        public List<string> GetRawData()
+        {
+            return _cells.Values.ToList();
+        }
     }
 }

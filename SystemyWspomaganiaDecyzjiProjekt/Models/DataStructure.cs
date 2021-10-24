@@ -9,19 +9,46 @@ namespace SystemyWspomaganiaDecyzjiProjekt.Models
 {
     public class DataStructure
     {
-        private Dictionary<string, ColumnType> columnTypes = new Dictionary<string, ColumnType>();
-
+        private Dictionary<string, ColumnType> _columnTypes = new Dictionary<string, ColumnType>();
         private List<DataRow> rows = new List<DataRow>();
+
+        public void InitializeColumnTypes(IEnumerable<string> columnNames)
+        {
+            foreach (var name in columnNames)
+            {
+                _columnTypes.Add(name, ColumnType.INT);
+            }
+        }
+
+        public List<string> GetColumnNames()
+        {
+            return _columnTypes.Keys.ToList();
+        }
+
+        public List<List<string>> GetRowsRaw()
+        {
+            List<List<string>> result = new List<List<string>>();
+
+            foreach (DataRow row in rows)
+            {
+                result.Add(row.GetRawData());
+            }
+
+            return result;
+        }
+        public IEnumerable<object> GetValuesDistinct(string columnName)
+        {
+            return  rows.Select(x => x.GetValue(columnName)).Distinct();
+        }
          public void ImportData(DataTable dataTable)
         {
             foreach (System.Data.DataRow item in dataTable.Rows)
             {
 
                 List<string> _cells = new List<string>();
-                int counter = 0;
+
                 foreach (var cell in item.ItemArray)
                 {
-                    counter++;
                     _cells.Add(cell.ToString());
                 }
 
@@ -44,7 +71,7 @@ namespace SystemyWspomaganiaDecyzjiProjekt.Models
         {
             int i = 0;
             Dictionary<string, string> cells = new Dictionary<string, string>();
-            foreach (var column in columnTypes)
+            foreach (var column in _columnTypes)
             {
                 var cellValue = values.ElementAtOrDefault(i) ?? "";
                 cells[column.Key] = cellValue;
@@ -65,9 +92,9 @@ namespace SystemyWspomaganiaDecyzjiProjekt.Models
         private void UpdateColumnType(string columnName, string value)
         {
             if (!int.TryParse(value, out _))
-                columnTypes[columnName] = ColumnType.DECIMAL;
+                _columnTypes[columnName] = ColumnType.DECIMAL;
             if (!decimal.TryParse(value, out _))
-                columnTypes[columnName] = ColumnType.STRING;
+                _columnTypes[columnName] = ColumnType.STRING;
         }
 
     }

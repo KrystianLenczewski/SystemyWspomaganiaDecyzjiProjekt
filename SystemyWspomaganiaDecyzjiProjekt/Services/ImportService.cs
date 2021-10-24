@@ -66,29 +66,29 @@ namespace SystemyWspomaganiaDecyzjiProjekt.Services
                             {
                                 dt.Columns.Add(item);
                             }
+                            continue;
                         }
-                        else if(dt.Columns.Count == 0 && !model.IsHeader)
+                         if(dt.Columns.Count == 0 && !model.IsHeader)
                         {
                             string[] columnHeders = line.Split("\t");
                             int columnNumbers = columnHeders.Count();
 
-                           for(int i=0;i<columnNumbers; i++)
+                            for(int i=1; i<=columnNumbers; i++)
                             {
-                                dt.Columns.Add($"Kolumna nr {i + 1}");
+                                dt.Columns.Add($"Column{i}");
                             }
                         }
-                        else
+                      
+
+                        var row = dt.NewRow();
+                        string[] cells = line.Split("\t");
+
+                        for (int i = 0; i < cells.Length; i++)
                         {
-
-                            var row = dt.NewRow();
-                            string[] cells = line.Split("\t");
-
-                            for (int i = 0; i < cells.Length; i++)
-                            {
-                                row[i] = cells[i];
-                            }
-                            dt.Rows.Add(row);
+                            row[i] = cells[i];
                         }
+                        dt.Rows.Add(row);
+                        
                     }
                 }
             }
