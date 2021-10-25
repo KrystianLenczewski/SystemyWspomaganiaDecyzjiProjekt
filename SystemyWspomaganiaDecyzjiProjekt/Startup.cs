@@ -29,6 +29,7 @@ namespace SystemyWspomaganiaDecyzjiProjekt
             services.AddControllersWithViews();
             services.AddSingleton<DataStructure>();
             services.AddTransient<IImportService, ImportService>();
+            services.AddTransient<IDataOperationsService, DataOperationsService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

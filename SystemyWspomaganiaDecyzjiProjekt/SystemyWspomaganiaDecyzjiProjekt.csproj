@@ -6,11 +6,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Structure\**" />
+    <Content Remove="Structure\**" />
+    <EmbeddedResource Remove="Structure\**" />
+    <None Remove="Structure\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Structure\" />
+    <Folder Include="Models\ViewModels\" />
   </ItemGroup>
 
 </Project>

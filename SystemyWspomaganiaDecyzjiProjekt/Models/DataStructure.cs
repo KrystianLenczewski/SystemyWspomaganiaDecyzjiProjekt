@@ -20,9 +20,12 @@ namespace SystemyWspomaganiaDecyzjiProjekt.Models
             }
         }
 
-        public List<string> GetColumnNames()
+        public List<string> GetColumnNames(ColumnType? columnType = null)
         {
-            return _columnTypes.Keys.ToList();
+            var result = _columnTypes.Keys.ToList();
+            if (columnType is not null)
+                result = _columnTypes.Where(w => w.Value == columnType).Select(s => s.Key).ToList();
+            return result;
         }
 
         public List<List<string>> GetRowsRaw()
@@ -36,11 +39,22 @@ namespace SystemyWspomaganiaDecyzjiProjekt.Models
 
             return result;
         }
+
+        public List<string> GetRowsRawForColumn(string columnName)
+        {
+            List<string> toReturn = new List<string>();
+            if (_columnTypes.ContainsKey(columnName))
+                toReturn = rows.Select(s => s.GetValue(columnName)).ToList();
+
+            return toReturn;
+        }
+
         public IEnumerable<object> GetValuesDistinct(string columnName)
         {
-            return  rows.Select(x => x.GetValue(columnName)).Distinct();
+            return rows.Select(x => x.GetValue(columnName)).Distinct();
         }
-         public void ImportData(DataTable dataTable)
+
+        public void ImportData(DataTable dataTable)
         {
             foreach (System.Data.DataRow item in dataTable.Rows)
             {
@@ -52,19 +66,9 @@ namespace SystemyWspomaganiaDecyzjiProjekt.Models
                     _cells.Add(cell.ToString());
                 }
 
-                //DataRow row = new DataRow(_cells);
                 AddRow(_cells);
             }
 
-        }
-
-        public void AddEmptyColumn(string name, ColumnType columnType)
-        {
-            foreach (var row in rows)
-            {
-                row.AddCell(name);
-
-            }
         }
 
         public void AddRow(List<string> values)
@@ -82,6 +86,20 @@ namespace SystemyWspomaganiaDecyzjiProjekt.Models
             rows.Add(new DataRow(cells));
         }
 
+        public void AddColumn(string columnName, List<string> values)
+        {
+            if (!_columnTypes.ContainsKey(columnName))
+            {
+                _columnTypes.Add(columnName, ColumnType.INT);
+
+                for (int i = 0; i < rows.Count; i++)
+                {
+                    string cellValue = values.ElementAtOrDefault(i) ?? string.Empty;
+                    rows[i].AddCell(columnName, cellValue);
+                    UpdateColumnType(columnName, cellValue);
+                }
+            }
+        }
 
         public object GetValue(int rowNumber, string columnName)
         {

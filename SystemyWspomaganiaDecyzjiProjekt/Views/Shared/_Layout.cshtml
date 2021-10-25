@@ -27,6 +27,17 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Import" asp-action="Index">Import file</a>
                         </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Operacje na kolumnach
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <button class="dropdown-item" data-toggle="modal" data-target="#textToNumbersModal">Tekst na liczby</button>
+                                <a class="dropdown-item" href="#">Another action</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">Something else here</a>
+                            </div>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -46,5 +57,29 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
+
+    <!-- textToNumbersModal -->
+    <div class="modal fade" id="textToNumbersModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Wybierz kolumnę</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form asp-controller="DataOperation" asp-action="ChangeTextToNumbers" method="get">
+                    <div class="modal-body">
+                        @await Component.InvokeAsync(nameof(ColumnNamesDropDown), new {dropdownId="textToNumberDropdown", columnType = ColumnType.STRING})
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+                        <button type="submit" class="btn btn-primary">Wybierz</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

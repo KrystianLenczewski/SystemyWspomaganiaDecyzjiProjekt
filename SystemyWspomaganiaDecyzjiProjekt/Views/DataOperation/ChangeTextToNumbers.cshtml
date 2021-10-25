@@ -1,0 +1,17 @@
+﻿@model Dictionary<string, int>
+
+
+<h4 style="margin-bottom: 50px">Wprowadź wartości liczbowe odpowiadające wartościom tekstowym</h4>
+<b style="color: red">@Html.ValidationSummary()</b>
+<form asp-action="ChangeTextToNumbers" method="post">
+    @if (Context.Request.Query.TryGetValue("textToNumberDropdown", out var columnName))
+    {
+        <input type="text" name="columnName" value="@columnName.ToString()" hidden />
+    }
+    @foreach (var mapping in Model)
+    {
+        <label><b>@mapping.Key ---></b></label><input type="number" name="mapping.@mapping.Key" value="@mapping.Value" /><br />
+    }
+
+    <button type="submit" class="btn btn-primary">Potwierdź</button>
+</form>
