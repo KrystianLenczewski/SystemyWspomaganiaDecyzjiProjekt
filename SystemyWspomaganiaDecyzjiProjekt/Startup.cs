@@ -30,6 +30,7 @@ namespace SystemyWspomaganiaDecyzjiProjekt
             services.AddSingleton<DataStructure>();
             services.AddTransient<IImportService, ImportService>();
             services.AddTransient<IDataOperationsService, DataOperationsService>();
+            services.AddTransient<IDataAnalizerService, DataAnalizerService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -17,10 +17,11 @@ namespace SystemyWspomaganiaDecyzjiProjekt.ViewComponents
             _dataStructure = dataStructure;
         }
 
-        public IViewComponentResult Invoke(string dropdownId, ColumnType? columnType = null)
+        public IViewComponentResult Invoke(string dropdownId, List<ColumnType> columnTypes)
         {
             ViewBag.DropdownId = dropdownId;
-            return View(_dataStructure.GetColumnNames(columnType));
+            var columnNames = columnTypes?.SelectMany(sm => _dataStructure.GetColumnNames(sm)).ToList() ?? new List<string>(); 
+            return View(columnNames);
         }
     }
 }

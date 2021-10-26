@@ -1,0 +1,19 @@
+﻿@model DiscretizeVariableViewModel
+
+<h4 style="margin-bottom: 50px">Wprowadź ustawienia dyskretyzacji</h4>
+<b style="color: red">@Html.ValidationSummary()</b>
+<form asp-action="DiscretizeVariable" method="post">
+    <input asp-for="ColumnName" hidden />
+    @for (int i = 0; i < Model.DiscretizeIntervals.Count; i++)
+    {
+        <label style="color: green" asp-for="@Model.DiscretizeIntervals[i]">Min</label>
+        <input style="margin-right: 10px;" asp-for="@Model.DiscretizeIntervals[i].MinValue" />
+        <label style="color: red" asp-for="@Model.DiscretizeIntervals[i]">Max</label>
+        <input style="margin-right: 10px;" asp-for="@Model.DiscretizeIntervals[i].MaxValue" />
+        <label asp-for="@Model.DiscretizeIntervals[i]">Etykieta przedziału</label>
+        <input style="margin-right: 10px;" asp-for="@Model.DiscretizeIntervals[i].Label" />
+        <br />
+    }
+
+    <button type="submit" class="btn btn-primary">Potwierdź</button>
+</form>

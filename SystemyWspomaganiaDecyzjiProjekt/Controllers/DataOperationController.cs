@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using SystemyWspomaganiaDecyzjiProjekt.Consts;
 using SystemyWspomaganiaDecyzjiProjekt.Models;
+using SystemyWspomaganiaDecyzjiProjekt.Models.ViewModels;
 using SystemyWspomaganiaDecyzjiProjekt.Services.Interfaces;
 
 namespace SystemyWspomaganiaDecyzjiProjekt.Controllers
@@ -13,11 +14,13 @@ namespace SystemyWspomaganiaDecyzjiProjekt.Controllers
     {
         private DataStructure _dataStructure;
         private IDataOperationsService _dataOperationsService;
+        private IDataAnalizerService _dataAnalizerService;
 
-        public DataOperationController(DataStructure dataStructure, IDataOperationsService dataOperationsService)
+        public DataOperationController(DataStructure dataStructure, IDataOperationsService dataOperationsService, IDataAnalizerService dataAnalizerService)
         {
             _dataStructure = dataStructure;
             _dataOperationsService = dataOperationsService;
+            _dataAnalizerService = dataAnalizerService;
         }
 
         public IActionResult ChangeTextToNumbers(string textToNumberDropdown)
@@ -29,14 +32,34 @@ namespace SystemyWspomaganiaDecyzjiProjekt.Controllers
         [HttpPost]
         public IActionResult ChangeTextToNumbers(Dictionary<string, int> mapping, string columnName)
         {
-            if (!mapping.Values.GroupBy(x => x).Any(g => g.Count() > 1))
+            try
             {
-                _dataOperationsService.ChangeTextToNumbers(columnName, mapping);
-                return RedirectToAction("Index", "Home");
+                if (!mapping.Values.GroupBy(x => x).Any(g => g.Count() > 1))
+                {
+                    _dataOperationsService.ChangeTextToNumbers(columnName, mapping);
+                    return RedirectToAction("Index", "Home");
+                }
+
+                ModelState.AddModelError("DuplicatedNumbers", ModelError.DUPLICATED_MAPPING_NUMBERS);
+            }
+            catch (Exception)
+            {
+                ModelState.AddModelError("InternalError", GenericError.SOMETHING_WENT_WRONG);
             }
 
-            ModelState.AddModelError("DuplicatedNumbers", ModelError.DUPLICATED_MAPPING_NUMBERS);
             return View(mapping);
+        }
+
+        public IActionResult DiscretizeVariable(string columnDiscretisationDropdown, int countOfIntervals)
+        {
+            List<DiscretizeInterval> discretizeIntervals = _dataAnalizerService.GetEqualDiscretizeIntervals(columnDiscretisationDropdown, countOfIntervals);
+            return View(new DiscretizeVariableViewModel(columnDiscretisationDropdown, discretizeIntervals));
+        }
+
+        [HttpPost]
+        public IActionResult DiscretizeVariable(DiscretizeVariableViewModel model)
+        {
+            return RedirectToAction("Index", "Home");
         }
     }
 }

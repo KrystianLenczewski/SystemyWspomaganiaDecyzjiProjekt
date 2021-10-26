@@ -42,6 +42,9 @@ namespace SystemyWspomaganiaDecyzjiProjekt.Models
 
         public List<string> GetRowsRawForColumn(string columnName)
         {
+            if (string.IsNullOrEmpty(columnName))
+                throw new ArgumentNullException(nameof(columnName));
+
             List<string> toReturn = new List<string>();
             if (_columnTypes.ContainsKey(columnName))
                 toReturn = rows.Select(s => s.GetValue(columnName)).ToList();
@@ -106,6 +109,14 @@ namespace SystemyWspomaganiaDecyzjiProjekt.Models
             return rows.ElementAtOrDefault(rowNumber)?.GetValue(columnName);
         }
 
+        public ColumnType GetColumnType(string columnName)
+        {
+            if (_columnTypes.TryGetValue(columnName, out ColumnType columnType))
+                return columnType;
+
+            throw new Exception($"Column {columnName} not exists in data structure.");
+        }
+
 
         private void UpdateColumnType(string columnName, string value)
         {
@@ -114,6 +125,5 @@ namespace SystemyWspomaganiaDecyzjiProjekt.Models
             if (!decimal.TryParse(value, out _))
                 _columnTypes[columnName] = ColumnType.STRING;
         }
-
     }
 }

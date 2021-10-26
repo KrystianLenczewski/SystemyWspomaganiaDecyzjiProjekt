@@ -33,6 +33,7 @@
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <button class="dropdown-item" data-toggle="modal" data-target="#textToNumbersModal">Tekst na liczby</button>
+                                <button class="dropdown-item" data-toggle="modal" data-target="#columnDiscretisationModal">Dyskretyzacja zmiennych</button>
                                 <a class="dropdown-item" href="#">Another action</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="#">Something else here</a>
@@ -71,7 +72,31 @@
                 </div>
                 <form asp-controller="DataOperation" asp-action="ChangeTextToNumbers" method="get">
                     <div class="modal-body">
-                        @await Component.InvokeAsync(nameof(ColumnNamesDropDown), new {dropdownId="textToNumberDropdown", columnType = ColumnType.STRING})
+                        @await Component.InvokeAsync(nameof(ColumnNamesDropDown), new { dropdownId = "textToNumberDropdown", columnTypes = new List<ColumnType> { ColumnType.STRING } })
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+                        <button type="submit" class="btn btn-primary">Wybierz</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- columnDiscretisationModal -->
+    <div class="modal fade" id="columnDiscretisationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Wybierz kolumnę</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form asp-controller="DataOperation" asp-action="DiscretizeVariable" method="get">
+                    <div class="modal-body">
+                        @await Component.InvokeAsync(nameof(ColumnNamesDropDown), new { dropdownId = "columnDiscretisationDropdown", columnTypes = new List<ColumnType> { ColumnType.INT, ColumnType.DECIMAL } })
+                        <input type="number" name="countOfIntervals" />
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
