@@ -34,7 +34,8 @@
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <button class="dropdown-item" data-toggle="modal" data-target="#textToNumbersModal">Tekst na liczby</button>
                                 <button class="dropdown-item" data-toggle="modal" data-target="#columnDiscretisationModal">Dyskretyzacja zmiennych</button>
-                                <a class="dropdown-item" href="#">Another action</a>
+                                <button class="dropdown-item" data-toggle="modal" data-target="#columnNormalizationModal">Normalizacja zmiennych rzeczywistych </button>
+                                <button class="dropdown-item" data-toggle="modal" data-target="#changeVariableRangeModal">Zmiana przedziału wartości</button>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="#">Something else here</a>
                             </div>
@@ -106,5 +107,54 @@
             </div>
         </div>
     </div>
+
+    <!-- columnNormalizationModal -->
+    <div class="modal fade" id="columnNormalizationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Wybierz kolumnę</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form asp-controller="DataOperation" asp-action="NormalizeVariable" method="post">
+                    <div class="modal-body">
+                        @await Component.InvokeAsync(nameof(ColumnNamesDropDown), new { dropdownId = "normalizationDropdown", columnTypes = new List<ColumnType> { ColumnType.INT, ColumnType.DECIMAL } })
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+                        <button type="submit" class="btn btn-primary">Wybierz</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- columnNormalizationModal -->
+    <div class="modal fade" id="changeVariableRangeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Wybierz kolumnę</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form asp-controller="DataOperation" asp-action="ChangeVariableRange" method="post">
+                    <div class="modal-body">
+                        @await Component.InvokeAsync(nameof(ColumnNamesDropDown), new { dropdownId = "changeVariableRangeDropdown", columnTypes = new List<ColumnType> { ColumnType.INT, ColumnType.DECIMAL } })
+                        <input type="text" name="min" />
+                        <input type="text" name="max" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+                        <button type="submit" class="btn btn-primary">Wybierz</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>

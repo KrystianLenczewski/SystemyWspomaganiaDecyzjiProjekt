@@ -59,7 +59,35 @@ namespace SystemyWspomaganiaDecyzjiProjekt.Controllers
         [HttpPost]
         public IActionResult DiscretizeVariable(DiscretizeVariableViewModel model)
         {
+
+            if (model is not null)
+            {
+                _dataOperationsService.DiscretizeVariable(model);
+                return RedirectToAction("Index", "Home");
+
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult NormalizeVariable(string normalizationDropdown)
+        {
+
+            _dataOperationsService.NormalizeVariable(normalizationDropdown);
+
             return RedirectToAction("Index", "Home");
         }
+
+
+        [HttpPost]
+        public IActionResult ChangeVariableRange(string changeVariableRangeDropdown, decimal min, decimal max)
+        {
+
+            _dataOperationsService.ChangeVariableRange(changeVariableRangeDropdown, min, max);
+
+            return RedirectToAction("Index", "Home");
+        }
+        
     }
 }
