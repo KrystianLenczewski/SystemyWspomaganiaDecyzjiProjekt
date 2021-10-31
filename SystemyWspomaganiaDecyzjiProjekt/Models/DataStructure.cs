@@ -20,6 +20,27 @@ namespace SystemyWspomaganiaDecyzjiProjekt.Models
             }
         }
 
+        public List<Dictionary<string, string>> GetRowsRawWithHeaders()
+        {
+            List<Dictionary<string, string>> result = new List<Dictionary<string, string>>();
+
+            List<List<string>> rowsRaw = GetRowsRaw();
+
+            List<string> columnNames = GetColumnNames();
+            foreach (var row in rowsRaw)
+            {
+                Dictionary<string, string> rowRaw = new Dictionary<string, string>();
+                for (int i=0;i< columnNames.Count; i++)
+                {
+                    rowRaw.Add(columnNames[i], row[i]);
+                }
+
+                result.Add(rowRaw);
+            }
+
+            return result;
+        }
+
         public List<string> GetColumnNames(ColumnType? columnType = null)
         {
             var result = _columnTypes.Keys.ToList();

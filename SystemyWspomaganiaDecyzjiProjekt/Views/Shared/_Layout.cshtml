@@ -3,12 +3,14 @@
 <head>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/3.4.0/js/bootstrap-colorpicker.min.js" integrity="sha512-94dgCw8xWrVcgkmOc2fwKjO4dqy/X3q7IjFru6MHJKeaAzCvhkVtOS6S+co+RbcZvvPBngLzuVMApmxkuWZGwQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - SystemyWspomaganiaDecyzjiProjekt</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.0/chart.min.js" integrity="sha512-GMGzUEevhWh8Tc/njS0bDpwgxdCJLQBWG3Z2Ct+JGOpVnEmjvNx6ts4v6A2XJf1HOrtOsfhv3hBKpK9kE5z8AQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
     <header>
@@ -38,6 +40,26 @@
                                 <button class="dropdown-item" data-toggle="modal" data-target="#changeVariableRangeModal">Zmiana przedziału wartości</button>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="#">Something else here</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Pozyskiwanie danych
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <button class="dropdown-item" data-toggle="modal" data-target="#percentMinMaxValuesModal">% najmniejszych/największych wartości</button>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">Something else here</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Wizualizacje
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <button class="dropdown-item" data-toggle="modal" data-target="#chart2DModal">Wykres 2D </button>
+                                <div class="dropdown-divider"></div>
+
                             </div>
                         </li>
                     </ul>
@@ -156,5 +178,58 @@
         </div>
     </div>
 
+    <!-- percentMinMaxValuesModal -->
+    <div class="modal fade" id="percentMinMaxValuesModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Wybierz kolumnę</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form asp-controller="DataMining" asp-action="GetPercentMinMaxValues" method="post">
+                    <div class="modal-body">
+                        @await Component.InvokeAsync(nameof(ColumnNamesDropDown), new { dropdownId = "percentMinMaxValuesDropdown", columnTypes = new List<ColumnType> { ColumnType.INT, ColumnType.DECIMAL } })
+                        <select name="loadType">
+                            <option value="MIN">Min</option>
+                            <option value="MAX">Max</option>
+                        </select>
+
+                        <input type="text" name="percent" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+                        <button type="submit" class="btn btn-primary">Wybierz</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="modal fade" id="chart2DModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Wybierz kolumnę</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form asp-controller="Visualization" asp-action="Show2DChart" method="get">
+                    <div class="modal-body">
+                        @await Component.InvokeAsync(nameof(ColumnNamesDropDown), new { dropdownId = "xAxisDropdown", columnTypes = new List<ColumnType> { ColumnType.INT, ColumnType.DECIMAL } })
+                        @await Component.InvokeAsync(nameof(ColumnNamesDropDown), new { dropdownId = "yAxisDropdown", columnTypes = new List<ColumnType> { ColumnType.INT, ColumnType.DECIMAL } })
+                        @await Component.InvokeAsync(nameof(ColumnNamesDropDown), new { dropdownId = "classDropdown", columnTypes = new List<ColumnType> { ColumnType.INT, ColumnType.DECIMAL, ColumnType.STRING } })
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+                        <button type="submit" class="btn btn-primary">Wybierz</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

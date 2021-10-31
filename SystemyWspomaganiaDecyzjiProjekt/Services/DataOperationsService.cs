@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using SystemyWspomaganiaDecyzjiProjekt.Infrastructure;
 using SystemyWspomaganiaDecyzjiProjekt.Models;
@@ -89,15 +90,17 @@ namespace SystemyWspomaganiaDecyzjiProjekt.Services
             decimal maxValue = dataRaw.Max();
 
             decimal ratio = (max - min) / (maxValue - minValue);
-            newColumnValues.Add(min.ToString("0.00"));
-            for(int i=1; i<dataRaw.Count()-1; i++)
+
+            for(int i=0; i<dataRaw.Count(); i++)
             {
-                decimal newValue = (dataRaw[i] * ratio) + min;
+                decimal newValue = ((dataRaw[i] - minValue) * ratio) + min;
                 newColumnValues.Add(newValue.ToString("0.00"));
             }
-            newColumnValues.Add(max.ToString("0.00"));
+           
             string newColumnName = GenerateGenericColumnName(_dataStructure.GetColumnNames());
             _dataStructure.AddColumn(newColumnName, newColumnValues);
+
+
         }
 
         private static string GenerateGenericColumnName(List<string> existingColumnNames)

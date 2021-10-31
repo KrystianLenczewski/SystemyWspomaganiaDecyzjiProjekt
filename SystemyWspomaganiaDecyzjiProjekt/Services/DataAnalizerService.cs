@@ -49,5 +49,46 @@ namespace SystemyWspomaganiaDecyzjiProjekt.Services
             result.Add(max);
             return result;
         }
+
+        public List<List<string>> GetPercentMinMaxValues(string columnName, decimal percent, DateLoadType dateLoadType)
+        {
+            List<Dictionary<string, string>> rowsRawWithHeaders = _dataStructure.GetRowsRawWithHeaders();
+
+            if(_dataStructure.GetColumnNames().Contains(columnName))
+            {
+                if (dateLoadType == DateLoadType.MAX)
+                    rowsRawWithHeaders = rowsRawWithHeaders.OrderByDescending(x => x[columnName]).ToList();
+                else
+                    rowsRawWithHeaders = rowsRawWithHeaders.OrderBy(x => x[columnName]).ToList();
+            }
+            return rowsRawWithHeaders.Take((int)(rowsRawWithHeaders.Count * (percent / 100))).Select(x=>x.Values.ToList()).ToList();
+        }
+
+        public List<Point2D> GetDataForChart2D(string xName, string yName, string className)
+        {
+            var rowsRawWithHeders = _dataStructure.GetRowsRawWithHeaders();
+            List<Point2D> result = new List<Point2D>();
+            foreach (var row in rowsRawWithHeders)
+            {
+                Point2D point2D = new Point2D
+                {
+                    X = decimal.Parse(row[xName]),
+                    Y = decimal.Parse(row[yName]),
+                    Class = row[className]
+                };
+                result.Add(point2D);
+            }
+
+            return result;
+        }
+
+        public List<Point3D> GetDataForChart3D(string xName, string yName, string zName, string className)
+        {
+            return new List<Point3D>();
+        }
+
+       
+
+
     }
 }
