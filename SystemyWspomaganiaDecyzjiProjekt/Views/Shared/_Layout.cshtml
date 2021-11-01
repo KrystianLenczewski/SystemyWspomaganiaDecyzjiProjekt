@@ -58,6 +58,7 @@
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <button class="dropdown-item" data-toggle="modal" data-target="#chart2DModal">Wykres 2D </button>
+                                <button class="dropdown-item" data-toggle="modal" data-target="#chart3DModal">Wykres 3D </button>
                                 <div class="dropdown-divider"></div>
 
                             </div>
@@ -207,7 +208,7 @@
         </div>
     </div>
 
-    
+
     <div class="modal fade" id="chart2DModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -219,9 +220,34 @@
                 </div>
                 <form asp-controller="Visualization" asp-action="Show2DChart" method="get">
                     <div class="modal-body">
-                        @await Component.InvokeAsync(nameof(ColumnNamesDropDown), new { dropdownId = "xAxisDropdown", columnTypes = new List<ColumnType> { ColumnType.INT, ColumnType.DECIMAL } })
-                        @await Component.InvokeAsync(nameof(ColumnNamesDropDown), new { dropdownId = "yAxisDropdown", columnTypes = new List<ColumnType> { ColumnType.INT, ColumnType.DECIMAL } })
-                        @await Component.InvokeAsync(nameof(ColumnNamesDropDown), new { dropdownId = "classDropdown", columnTypes = new List<ColumnType> { ColumnType.INT, ColumnType.DECIMAL, ColumnType.STRING } })
+                       X @await Component.InvokeAsync(nameof(ColumnNamesDropDown), new { dropdownId = "xAxisDropdown", columnTypes = new List<ColumnType> { ColumnType.INT, ColumnType.DECIMAL } })
+                       Y @await Component.InvokeAsync(nameof(ColumnNamesDropDown), new { dropdownId = "yAxisDropdown", columnTypes = new List<ColumnType> { ColumnType.INT, ColumnType.DECIMAL } })
+                       Klasa @await Component.InvokeAsync(nameof(ColumnNamesDropDown), new { dropdownId = "classDropdown", columnTypes = new List<ColumnType> { ColumnType.INT, ColumnType.DECIMAL, ColumnType.STRING } })
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+                        <button type="submit" class="btn btn-primary">Wybierz</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="chart3DModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Wybierz kolumnę</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form asp-controller="Visualization" asp-action="Show3DChart" method="get">
+                    <div class="modal-body">
+                       X  @await Component.InvokeAsync(nameof(ColumnNamesDropDown), new { dropdownId = "xAxisDropdown", columnTypes = new List<ColumnType> { ColumnType.INT, ColumnType.DECIMAL } })
+                       Y  @await Component.InvokeAsync(nameof(ColumnNamesDropDown), new { dropdownId = "yAxisDropdown", columnTypes = new List<ColumnType> { ColumnType.INT, ColumnType.DECIMAL } })
+                       Z  @await Component.InvokeAsync(nameof(ColumnNamesDropDown), new { dropdownId = "zAxisDropdown", columnTypes = new List<ColumnType> { ColumnType.INT, ColumnType.DECIMAL } })
+                       Klasa @await Component.InvokeAsync(nameof(ColumnNamesDropDown), new { dropdownId = "classDropdown", columnTypes = new List<ColumnType> { ColumnType.INT, ColumnType.DECIMAL, ColumnType.STRING } })
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>

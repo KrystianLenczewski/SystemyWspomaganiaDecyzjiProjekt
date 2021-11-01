@@ -38,6 +38,28 @@ namespace SystemyWspomaganiaDecyzjiProjekt.Controllers
             return View(model);
         }
 
+        public IActionResult Show3DChart(string xAxisDropdown, string yAxisDropdown, string zAxisDropdown, string classDropdown)
+        {
+            Chart3DVm chart3DVm = new Chart3DVm
+            {
+                XColumnName = xAxisDropdown,
+                YColumnName = yAxisDropdown,
+                ZColumnName = zAxisDropdown,
+                ClassName = classDropdown,
+                ClassColorMapping = _dataStructure.GetValuesDistinct(classDropdown).Select(x => x.ToString()).ToDictionary(x => x, y => string.Empty)
+            };
+
+            return View("ColorSelectingForChart3D", chart3DVm);
+        }
+
+        [HttpPost]
+        public IActionResult Show3DChart(Chart3DVm model)
+        {
+            List<Point3D> points3D = _dataAnalizerService.GetDataForChart3D(model.XColumnName, model.YColumnName, model.ZColumnName, model.ClassName);
+            model.ClassPoints = points3D;
+
+            return View(model);
+        }
 
     }
 }

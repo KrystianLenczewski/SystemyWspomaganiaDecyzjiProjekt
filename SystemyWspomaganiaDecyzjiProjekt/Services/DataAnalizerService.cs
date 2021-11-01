@@ -84,7 +84,21 @@ namespace SystemyWspomaganiaDecyzjiProjekt.Services
 
         public List<Point3D> GetDataForChart3D(string xName, string yName, string zName, string className)
         {
-            return new List<Point3D>();
+            var rowsRawWithHeders = _dataStructure.GetRowsRawWithHeaders();
+            List<Point3D> result = new List<Point3D>();
+            foreach (var row in rowsRawWithHeders)
+            {
+                Point3D point3D = new Point3D
+                {
+                    X = decimal.Parse(row[xName]),
+                    Y = decimal.Parse(row[yName]),
+                    Z = decimal.Parse(row[zName]),
+                    Class = row[className]
+                };
+                result.Add(point3D);
+            }
+
+            return result;
         }
 
        
