@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SystemyWspomaganiaDecyzjiProjekt.Enums;
+using SystemyWspomaganiaDecyzjiProjekt.Infrastructure;
 using SystemyWspomaganiaDecyzjiProjekt.Models;
 using SystemyWspomaganiaDecyzjiProjekt.Models.ViewModels;
 using SystemyWspomaganiaDecyzjiProjekt.Services.Interfaces;
@@ -20,14 +21,14 @@ namespace SystemyWspomaganiaDecyzjiProjekt.Services
 
         public List<DiscretizeInterval> GetEqualDiscretizeIntervals(string columnName, int intervalCount)
         {
-            if (_dataStructure.GetColumnNames().Contains(columnName) && _dataStructure.GetColumnType(columnName) != ColumnType.STRING)
+            if (_dataStructure.GetColumnNames().Contains(columnName) && _dataStructure.GetColumnType(columnName) != ColumnType.STRING && intervalCount > 0)
             {
                 IEnumerable<decimal> distinctValues = _dataStructure.GetValuesDistinct(columnName).Select(s => decimal.Parse(s.ToString()));
                 var orderedIntervalBorders = GetOrderedIntervalBorders(distinctValues.Min(), distinctValues.Max(), intervalCount);
                 List<DiscretizeInterval> discretizeIntervals = new();
 
                 for (int i = 0; i < orderedIntervalBorders.Count - 1; i++)
-                    discretizeIntervals.Add(new DiscretizeInterval { MinValue = orderedIntervalBorders[i], MaxValue = orderedIntervalBorders[i + 1] });
+                    discretizeIntervals.Add(new DiscretizeInterval { MinValue = orderedIntervalBorders[i], MaxValue = orderedIntervalBorders[i + 1], Label = i.ToString() });
 
                 return discretizeIntervals;
             }
@@ -101,7 +102,24 @@ namespace SystemyWspomaganiaDecyzjiProjekt.Services
             return result;
         }
 
-       
+       public SortedDictionary<string, int> GetDataForHistogram(string columnName, int intervalCount)
+        {
+            List<string> dataRaw = _dataStructure.GetRowsRawForColumn(columnName);
+            List<DiscretizeInterval> discretizeIntervals = GetEqualDiscretizeIntervals(columnName, intervalCount);
+            List<string> newColumnValues = StatisticOperation.DiscretizeVariable(dataRaw, discretizeIntervals);
+
+            SortedDictionary<string, int> result = new();
+
+            foreach (var value in newColumnValues)
+            {
+                if (result.ContainsKey(value))
+                    result[value]++;
+                else
+                    result.Add(value, 1);
+            }
+
+            return result;
+        }
 
 
     }

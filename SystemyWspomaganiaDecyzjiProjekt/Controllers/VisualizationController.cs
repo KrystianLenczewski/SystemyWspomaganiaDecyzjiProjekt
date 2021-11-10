@@ -61,5 +61,14 @@ namespace SystemyWspomaganiaDecyzjiProjekt.Controllers
             return View(model);
         }
 
+
+        [HttpPost]
+        public IActionResult ShowHistogram(string columnNameDropdown, int intervalCount)
+        {
+            
+
+            return View(_dataAnalizerService.GetDataForHistogram(columnNameDropdown, intervalCount));
+        }
+        
     }
 }

@@ -41,25 +41,15 @@ namespace SystemyWspomaganiaDecyzjiProjekt.Services
         public void DiscretizeVariable(DiscretizeVariableViewModel model)
         {
             List<string> dataRaw = _dataStructure.GetRowsRawForColumn(model.ColumnName);
-            List<string> newColumnValues = new List<string>();
-            DiscretizeInterval lastInterval = model.DiscretizeIntervals.Last();
-            foreach (var value in dataRaw.Select(x => decimal.Parse(x)))
-            {   
-                foreach (var discretizeInterval in model.DiscretizeIntervals)
-                {
-                    bool isLastInterval = discretizeInterval.Label == lastInterval.Label;
 
-                    if ((value >= discretizeInterval.MinValue && value < discretizeInterval.MaxValue)
-                        || (value >= discretizeInterval.MinValue && value <= discretizeInterval.MaxValue && isLastInterval))
-                    {
-                        newColumnValues.Add(discretizeInterval.Label);
-                    }
 
-                }
-            }
+            List<string> newColumnValues = StatisticOperation.DiscretizeVariable(dataRaw, model.DiscretizeIntervals);
+
             string newColumnName = GenerateGenericColumnName(_dataStructure.GetColumnNames());
             _dataStructure.AddColumn(newColumnName, newColumnValues);
         }
+
+
 
 
         public void NormalizeVariable(string columnName)
