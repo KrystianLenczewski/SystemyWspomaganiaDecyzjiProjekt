@@ -83,11 +83,11 @@ namespace SystemyWspomaganiaDecyzjiProjekt.Models
             foreach (System.Data.DataRow item in dataTable.Rows)
             {
 
-                List<string> _cells = new List<string>();
+                Dictionary<string, string> _cells = new Dictionary<string, string>();
 
-                foreach (var cell in item.ItemArray)
+                for (int i = 0; i < dataTable.Columns.Count; i++)
                 {
-                    _cells.Add(cell.ToString());
+                    _cells.Add(dataTable.Columns[i].ColumnName, item[dataTable.Columns[i].ColumnName].ToString());
                 }
 
                 AddRow(_cells);
@@ -95,16 +95,21 @@ namespace SystemyWspomaganiaDecyzjiProjekt.Models
 
         }
 
-        public void AddRow(List<string> values)
+        public void AddRow(Dictionary<string,string> values)
         {
-            int i = 0;
             Dictionary<string, string> cells = new Dictionary<string, string>();
             foreach (var column in _columnTypes)
             {
-                var cellValue = values.ElementAtOrDefault(i) ?? "";
-                cells[column.Key] = cellValue;
-                UpdateColumnType(column.Key, cellValue);
-                i++;
+               if(values.TryGetValue(column.Key, out string cellValue))
+                {
+                    cells[column.Key] = cellValue;
+                    UpdateColumnType(column.Key, cellValue);
+                }
+                else
+                {
+                    cells[column.Key] = "";
+                    UpdateColumnType(column.Key, cellValue);
+                }
             }
 
             rows.Add(new DataRow(cells));

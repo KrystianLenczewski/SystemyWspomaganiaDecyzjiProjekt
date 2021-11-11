@@ -54,6 +54,12 @@ namespace SystemyWspomaganiaDecyzjiProjekt.Infrastructure
             {
                 if (metric == KNNMetric.METRYKA_EUKLIDESOWA)
                     result.Add((KnnMetrics.EvaluateDistanceEuclideaMetric(values, row.Item1), row.Item2));
+                else if (metric == KNNMetric.METRYKA_MANHATTAN)
+                    result.Add((KnnMetrics.EvaluateDistanceManhattanMetric(values, row.Item1), row.Item2));
+                else if (metric == KNNMetric.METRYKA_CZEBYSZEWA)
+                    result.Add((KnnMetrics.EvaluateDistanceCzebyszewaMetric(values, row.Item1), row.Item2));
+                else if (metric == KNNMetric.METRYKA_MAHALANOBISA)
+                    result.Add((KnnMetrics.EvaluateDistanceMahalanobisaMetric(values, row.Item1, _data), row.Item2));
             }
 
             return result.OrderBy(o => o.Item1).Take(k).ToList();

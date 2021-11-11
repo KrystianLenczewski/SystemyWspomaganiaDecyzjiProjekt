@@ -55,7 +55,11 @@ namespace SystemyWspomaganiaDecyzjiProjekt.Controllers
             }
 
 
-            return RedirectToAction("ClassificationEvaluation", classificationVm);
+
+
+
+
+            return View("ClassificationEvaluation", classificationVm);
         }
 
   
@@ -64,7 +68,11 @@ namespace SystemyWspomaganiaDecyzjiProjekt.Controllers
         public IActionResult ClassificationMode(ClassificationModeVm model)
         {
             string newObjectClass = _classificationService.ClassifyNewObjectUsingKNN(model);
-            return View();
+            Dictionary<string, string> newRow = new Dictionary<string, string>(model.RowValues);
+            newRow.Add(model.ClassificationVm.KlasaDecyzyjnaDropdown, newObjectClass);
+            _dataStructure.AddRow(newRow);
+
+            return RedirectToAction("Index","Home");
         }
     }
 }
