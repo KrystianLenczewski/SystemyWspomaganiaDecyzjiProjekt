@@ -2,17 +2,22 @@
 using System.Collections.Generic;
 using System.Linq;
 using SystemyWspomaganiaDecyzjiProjekt.Enums;
+using SystemyWspomaganiaDecyzjiProjekt.Infrastructure;
 using SystemyWspomaganiaDecyzjiProjekt.Models;
 using SystemyWspomaganiaDecyzjiProjekt.Models.ViewModels;
+using SystemyWspomaganiaDecyzjiProjekt.Services.Interfaces;
 
 namespace SystemyWspomaganiaDecyzjiProjekt.Controllers
 {
     public class ClassificationController : Controller
     {
-        private DataStructure _dataStructure;
-        public ClassificationController(DataStructure dataStructure)
+        private readonly DataStructure _dataStructure;
+        private readonly IClassificationService _classificationService;
+
+        public ClassificationController(DataStructure dataStructure, IClassificationService classificationService)
         {
             _dataStructure = dataStructure;
+            _classificationService = classificationService;
         }
 
         [HttpPost]
@@ -58,6 +63,7 @@ namespace SystemyWspomaganiaDecyzjiProjekt.Controllers
         [HttpPost]
         public IActionResult ClassificationMode(ClassificationModeVm model)
         {
+            string newObjectClass = _classificationService.ClassifyNewObjectUsingKNN(model);
             return View();
         }
     }

@@ -31,6 +31,7 @@ namespace SystemyWspomaganiaDecyzjiProjekt
             services.AddTransient<IImportService, ImportService>();
             services.AddTransient<IDataOperationsService, DataOperationsService>();
             services.AddTransient<IDataAnalizerService, DataAnalizerService>();
+            services.AddTransient<IClassificationService, ClassificationService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

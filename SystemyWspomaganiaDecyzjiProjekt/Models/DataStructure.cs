@@ -41,11 +41,11 @@ namespace SystemyWspomaganiaDecyzjiProjekt.Models
             return result;
         }
 
-        public List<string> GetColumnNames(ColumnType? columnType = null)
+        public List<string> GetColumnNames(params ColumnType[] columnTypes)
         {
             var result = _columnTypes.Keys.ToList();
-            if (columnType is not null)
-                result = _columnTypes.Where(w => w.Value == columnType).Select(s => s.Key).ToList();
+            if (columnTypes?.Any() == true)
+                result = _columnTypes.Where(w => columnTypes.Contains(w.Value)).Select(s => s.Key).ToList();
             return result;
         }
 
