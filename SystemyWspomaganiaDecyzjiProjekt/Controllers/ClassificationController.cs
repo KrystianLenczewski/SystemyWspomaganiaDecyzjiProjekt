@@ -54,12 +54,7 @@ namespace SystemyWspomaganiaDecyzjiProjekt.Controllers
                 return View("ClassificationMode", classificationModeVm);
             }
 
-
-
-
-
-
-            return View("ClassificationEvaluation", classificationVm);
+            return RedirectToAction("ClassificationEvaluation", classificationVm);
         }
 
   
@@ -73,6 +68,12 @@ namespace SystemyWspomaganiaDecyzjiProjekt.Controllers
             _dataStructure.AddRow(newRow);
 
             return RedirectToAction("Index","Home");
+        }
+
+        public IActionResult ClassificationEvaluation(ClassificationVm classificationVm)
+        {
+            CrossValidationResult crossValidationResult = _classificationService.EvaluateKNNClassificationQuality(classificationVm);
+            return View(crossValidationResult);
         }
     }
 }

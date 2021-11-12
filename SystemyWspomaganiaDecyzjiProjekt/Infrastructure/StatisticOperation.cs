@@ -45,5 +45,24 @@ namespace SystemyWspomaganiaDecyzjiProjekt.Infrastructure
 
             return newColumnValues;
         }
+
+        public static decimal CalculateCovariance(List<decimal> arr1, List<decimal> arr2, int n)
+        {
+            decimal sum = 0;
+
+            for (int i = 0; i < n; i++)
+                sum += (arr1[i] - Mean(arr1, n)) * (arr2[i] - Mean(arr2, n));
+            return sum / (n - 1);
+        }
+
+        public static decimal Mean(List<decimal> arr, int n)
+        {
+            decimal sum = 0;
+
+            for (int i = 0; i < n; i++)
+                sum += arr[i];
+
+            return sum / n;
+        }
     }
 }

@@ -9,10 +9,12 @@ namespace SystemyWspomaganiaDecyzjiProjekt.Infrastructure
     public class KnnClassifier
     {
         private readonly List<(List<decimal>, string)> _data;
+        private readonly KnnDistanceEvaluator _distanceEvaluator;
 
         public KnnClassifier(List<(List<decimal>, string)> data)
         {
             _data = data;
+            _distanceEvaluator = new KnnDistanceEvaluator(_data.Select(s => s.Item1).ToList());
         }
 
         public string GetNearestNeigboursClass(List<decimal> values, int k, KNNMetric metric)
@@ -21,7 +23,7 @@ namespace SystemyWspomaganiaDecyzjiProjekt.Infrastructure
             return GetClassBasedOfNN(kNearestNeighboursDistance);
         }
 
-        private static string GetClassBasedOfNN(List<(decimal, string)> kNearestNeighboursDistance)
+        public static string GetClassBasedOfNN(List<(decimal, string)> kNearestNeighboursDistance)
         {
             var countGroups = kNearestNeighboursDistance.GroupBy(k => k.Item2).Select(s => (s.Key, s.Count())).OrderByDescending(o => o.Item2).ToList();
             int groupMaxCount = countGroups[0].Item2;
@@ -51,16 +53,7 @@ namespace SystemyWspomaganiaDecyzjiProjekt.Infrastructure
         {
             List<(decimal, string)> result = new();
             foreach (var row in _data)
-            {
-                if (metric == KNNMetric.METRYKA_EUKLIDESOWA)
-                    result.Add((KnnMetrics.EvaluateDistanceEuclideaMetric(values, row.Item1), row.Item2));
-                else if (metric == KNNMetric.METRYKA_MANHATTAN)
-                    result.Add((KnnMetrics.EvaluateDistanceManhattanMetric(values, row.Item1), row.Item2));
-                else if (metric == KNNMetric.METRYKA_CZEBYSZEWA)
-                    result.Add((KnnMetrics.EvaluateDistanceCzebyszewaMetric(values, row.Item1), row.Item2));
-                else if (metric == KNNMetric.METRYKA_MAHALANOBISA)
-                    result.Add((KnnMetrics.EvaluateDistanceMahalanobisaMetric(values, row.Item1, _data), row.Item2));
-            }
+                result.Add((_distanceEvaluator.EvaluateDistance(values, row.Item1, metric), row.Item2));
 
             return result.OrderBy(o => o.Item1).Take(k).ToList();
         }
