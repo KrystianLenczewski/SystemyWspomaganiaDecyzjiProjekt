@@ -12,6 +12,19 @@ namespace SystemyWspomaganiaDecyzjiProjekt.Models
         private Dictionary<string, ColumnType> _columnTypes = new Dictionary<string, ColumnType>();
         private List<DataRow> rows = new List<DataRow>();
 
+
+        public List<DataPoint> GetPointsWithId()
+        {
+            List<DataPoint> dataPoints = new();
+
+            List<Dictionary<string, string>> list = GetRowsRawWithHeaders();
+            for (int i = 0; i < list.Count; i++)
+            {
+                dataPoints.Add(new DataPoint { Id = i, RowRawWithHeaders = list[i] });
+            }
+            return dataPoints;
+        }
+
         public void InitializeColumnTypes(IEnumerable<string> columnNames)
         {
             foreach (var name in columnNames)
@@ -115,7 +128,7 @@ namespace SystemyWspomaganiaDecyzjiProjekt.Models
             rows.Add(new DataRow(cells));
         }
 
-        public void AddColumn(string columnName, List<string> values)
+        public void AddColumn(string columnName, IEnumerable<string> values)
         {
             if (!_columnTypes.ContainsKey(columnName))
             {

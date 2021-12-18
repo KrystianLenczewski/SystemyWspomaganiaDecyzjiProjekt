@@ -10,7 +10,10 @@ namespace SystemyWspomaganiaDecyzjiProjekt.Models
         public int SampleSize { get; set; }
         public int CorrectlyClassified { get; set; }
         public double CorrectnessPercent { get => SampleSize == 0 ? 0 : (double)CorrectlyClassified / SampleSize * 100; private set { } }
+        public CrossValidationResult()
+        {
 
+        }
         public CrossValidationResult(int sampleSize, int correctlyClassified)
         {
             SampleSize = sampleSize;

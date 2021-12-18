@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using SystemyWspomaganiaDecyzjiProjekt.Enums;
 using SystemyWspomaganiaDecyzjiProjekt.Infrastructure;
@@ -72,7 +73,17 @@ namespace SystemyWspomaganiaDecyzjiProjekt.Controllers
 
         public IActionResult ClassificationEvaluation(ClassificationVm classificationVm)
         {
-            CrossValidationResult crossValidationResult = _classificationService.EvaluateKNNClassificationQuality(classificationVm);
+            
+            CrossValidationResult crossValidationResult = new CrossValidationResult();
+            List<string> classificationResult = new List<string>();
+            for(int i=1;i<=132;i++)
+            {
+                classificationVm.KNajblizszychSasiadow = i;
+                crossValidationResult = _classificationService.EvaluateKNNClassificationQuality(classificationVm);
+                classificationResult.Add($"{i}\t{crossValidationResult.CorrectlyClassified}\t{crossValidationResult.SampleSize}\t{crossValidationResult.CorrectnessPercent.ToString("0.##")}");
+                
+            }
+            System.IO.File.WriteAllLines(@"C:\Users\Krystian\Desktop\SystemyyBazDanych_Dane\classificationResult.txt", classificationResult);
             return View(crossValidationResult);
         }
     }

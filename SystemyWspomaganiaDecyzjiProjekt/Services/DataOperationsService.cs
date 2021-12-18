@@ -93,7 +93,7 @@ namespace SystemyWspomaganiaDecyzjiProjekt.Services
 
         }
 
-        private static string GenerateGenericColumnName(List<string> existingColumnNames)
+        public static string GenerateGenericColumnName(List<string> existingColumnNames)
         {
             int counter = 0;
             while (true)
